@@ -1,0 +1,229 @@
+/* --- Reset și Variabile Globale --- */
+:root {
+  --bg-color: #121212;
+  --card-bg: #1e1e1e;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --accent-color: #e50914; /* Roșu stil Netflix */
+  --accent-hover: #b2070f;
+  --success: #28a745;
+  --success-hover: #218838;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: var(--text-primary);
+}
+
+/* --- Bara de Căutare --- */
+.search-box {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.search-box input {
+  padding: 15px 20px;
+  width: 70%;
+  max-width: 500px;
+  font-size: 16px;
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid #333;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-box input:focus {
+  border-color: var(--accent-color);
+}
+
+.search-box button {
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.search-box button:hover {
+  background-color: var(--accent-hover);
+}
+
+.search-box button:active {
+  transform: scale(0.98);
+}
+
+/* --- Cardul Filmului (Rezultatul Căutării) --- */
+.movie-card {
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  padding: 30px;
+  margin: 0 auto 50px auto;
+  max-width: 600px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.movie-card img {
+  border-radius: 8px;
+  width: 100%;
+  max-width: 300px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  margin-bottom: 20px;
+}
+
+.movie-card h2 {
+  margin: 10px 0;
+  font-size: 2rem;
+}
+
+.movie-card .plot {
+  color: var(--text-secondary);
+  font-style: italic;
+  line-height: 1.6;
+  margin: 20px 0;
+}
+
+/* --- Recomandări Inteligente --- */
+.rec-good, .rec-bad, .rec-neutral {
+  padding: 12px 20px;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.rec-good { background-color: rgba(40, 167, 69, 0.2); color: #4ade80; border: 1px solid #28a745; }
+.rec-bad { background-color: rgba(220, 53, 69, 0.2); color: #ff8a95; border: 1px solid #dc3545; }
+.rec-neutral { background-color: rgba(255, 193, 7, 0.2); color: #ffd54f; border: 1px solid #ffc107; }
+
+/* Butonul de adăugare */
+.add-btn {
+  background-color: var(--success);
+  color: white;
+  border: none;
+  padding: 15px;
+  width: 100%;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-btn:hover { background-color: var(--success-hover); }
+
+/* --- Secțiunea Watchlist (Grila cu filme salvate) --- */
+.watchlist-section {
+  padding-top: 40px;
+  border-top: 1px solid #333;
+}
+
+.watchlist-section h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.watchlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 25px;
+}
+
+.watchlist-item {
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.watchlist-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+.watchlist-item img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  border-bottom: 2px solid var(--accent-color);
+}
+
+.item-details {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.item-details h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.item-details p {
+  color: #ffd54f; /* Culoare aurie pentru steaua de rating */
+  margin: 0 0 15px 0;
+  font-weight: bold;
+}
+
+.delete-btn {
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--text-secondary);
+  padding: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: auto; /* Împinge butonul la baza cardului */
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  background-color: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.error {
+  color: #ff8a95;
+  font-size: 1.2rem;
+  margin-top: 20px;
+}
+
+/* --- Design Responsiv --- */
+@media (max-width: 600px) {
+  .search-box { flex-direction: column; }
+  .search-box input { width: 100%; box-sizing: border-box; }
+  h1 { font-size: 2rem; }
+}
