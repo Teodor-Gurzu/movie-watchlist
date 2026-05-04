@@ -33,28 +33,46 @@ h1 {
 }
 
 /* --- Bara de Căutare --- */
+/* --- Bara de Căutare și Sugestii (Modificate pentru Animație) --- */
 .search-box {
   display: flex;
   justify-content: center;
   gap: 15px;
   margin-bottom: 40px;
+  position: relative; /* Important pentru a ancora lista dedesubt */
+  z-index: 10;
 }
 
-.search-box input {
-  padding: 15px 20px;
+.input-wrapper {
+  position: relative;
   width: 70%;
   max-width: 500px;
-  font-size: 16px;
-  background-color: var(--card-bg);
-  color: var(--text-primary);
-  border: 1px solid #333;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.3s ease;
 }
 
-.search-box input:focus {
-  border-color: var(--accent-color);
+/* Animația magică de roșu și negru pe bordură */
+.glowing-input {
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 16px;
+  color: var(--text-primary);
+  border: 3px solid transparent;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+  
+  /* Truc CSS pentru bordură cu gradient animat */
+  background-image: linear-gradient(var(--card-bg), var(--card-bg)),
+                    linear-gradient(90deg, #ff0000, #111111, #e50914, #000000, #ff0000);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  background-size: 100% 100%, 300% 100%;
+  animation: glowingBorder 4s linear infinite;
+  box-shadow: 0 0 15px rgba(229, 9, 20, 0.2); /* O umbră ușoară roșiatică */
+}
+
+@keyframes glowingBorder {
+  0% { background-position: 0% 0%, 0% 0%; }
+  100% { background-position: 0% 0%, 100% 0%; }
 }
 
 .search-box button {
@@ -66,15 +84,50 @@ h1 {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease;
+  transition: all 0.3s ease;
+  height: fit-content;
 }
 
 .search-box button:hover {
   background-color: var(--accent-hover);
+  box-shadow: 0 0 15px rgba(229, 9, 20, 0.6);
 }
 
-.search-box button:active {
-  transform: scale(0.98);
+/* --- Lista de Autocomplete (Sugestii) --- */
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: var(--card-bg);
+  border: 1px solid #e50914; /* Bordură roșie */
+  border-radius: 8px;
+  margin-top: 5px;
+  padding: 0;
+  list-style: none;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+  overflow: hidden;
+  text-align: left;
+}
+
+.suggestions-list li {
+  padding: 12px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #333;
+  color: var(--text-secondary);
+  transition: background 0.2s;
+}
+
+.suggestions-list li:last-child {
+  border-bottom: none;
+}
+
+/* Cum arată când treci cu mouse-ul sau navighezi cu săgețile */
+.suggestions-list li:hover,
+.suggestions-list li.active {
+  background-color: #2a2a2a;
+  color: var(--text-primary);
+  border-left: 4px solid var(--accent-color);
 }
 
 /* --- Cardul Filmului (Rezultatul Căutării) --- */
