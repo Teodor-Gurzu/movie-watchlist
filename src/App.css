@@ -251,21 +251,70 @@ h1 {
   font-weight: bold;
 }
 
-.delete-btn {
-  background-color: transparent;
-  color: var(--text-secondary);
-  border: 1px solid var(--text-secondary);
+/* --- Butoane de Acțiune pe Carduri --- */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  width: 100%;
+}
+
+.mark-btn, .delete-btn {
+  flex: 1; /* Împarte spațiul egal între ele */
   padding: 8px;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: auto; /* Împinge butonul la baza cardului */
+  font-size: 0.9rem;
+  font-weight: bold;
   transition: all 0.2s ease;
+  border: none;
+}
+
+.mark-btn {
+  background-color: var(--success);
+  color: white;
+}
+
+.mark-btn:hover {
+  background-color: var(--success-hover);
+}
+
+.delete-btn {
+  background-color: transparent;
+  color: #ff8a95;
+  border: 1px solid #dc3545;
 }
 
 .delete-btn:hover {
   background-color: #dc3545;
   color: white;
-  border-color: #dc3545;
+}
+
+/* Stilizare pentru lista goală și titluri secțiuni */
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  text-align: left;
+  border-bottom: 2px solid #333;
+  padding-bottom: 10px;
+}
+
+.empty-msg {
+  text-align: left;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: 40px;
+}
+
+/* Un efect estompat pentru filmele deja vizionate */
+.watched-card {
+  opacity: 0.7;
+  filter: grayscale(40%);
+}
+.watched-card:hover {
+  opacity: 1;
+  filter: grayscale(0%);
 }
 
 .error {

@@ -1,25 +1,24 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import { db } from './firebase'; 
-import { collection, addDoc, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+// --- NOU: Am adăugat updateDoc aici ---
+import { collection, addDoc, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
 function App() {
   const [query, setQuery] = useState('');
   const [movie, setMovie] = useState(null);
   const [watchlist, setWatchlist] = useState([]); 
   
-  // --- STATE-URI NOI PENTRU SUGESTII ---
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const apiKey = '42a9bb73'; 
 
-  // Funcția principală de căutare a unui film specific (modificată să accepte un titlu direct)
   const searchMovie = async (searchTitle = query) => {
     if (!searchTitle) return;
-    setShowSuggestions(false); // Ascundem sugestiile când căutăm
-    setQuery(searchTitle); // Actualizăm bara cu numele complet
+    setShowSuggestions(false); 
+    setQuery(searchTitle); 
     
     try {
       const response = await fetch(`https://www.omdbapi.com/?t=${searchTitle}&apikey=${apiKey}`);
@@ -30,7 +29,6 @@ function App() {
     }
   };
 
-  // --- NOU: Efectul care aduce sugestiile în timp ce tastezi ---
   useEffect(() => {
     const fetchSuggestions = async () => {
       if (query.length < 2) {
@@ -39,11 +37,10 @@ function App() {
         return;
       }
       try {
-        // Observă "?s=" care caută o listă, nu doar un film
         const res = await fetch(`https://www.omdbapi.com/?s=${query}&apikey=${apiKey}`);
         const data = await res.json();
         if (data.Search) {
-          setSuggestions(data.Search.slice(0, 5)); // Luăm primele 5 sugestii
+          setSuggestions(data.Search.slice(0, 5)); 
           setShowSuggestions(true);
         }
       } catch (error) {
@@ -51,12 +48,10 @@ function App() {
       }
     };
 
-    // Un mic "delay" ca să nu apelăm API-ul la absolut fiecare literă instant (debounce)
     const timeoutId = setTimeout(() => fetchSuggestions(), 300);
     return () => clearTimeout(timeoutId);
   }, [query]);
 
-  // --- NOU: Funcția care navighează prin sugestii cu tastatura ---
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       if (showSuggestions && suggestions.length > 0) {
@@ -71,7 +66,6 @@ function App() {
     }
   };
 
-  // Conexiunea Firebase (rămâne la fel)
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "movies"), (snapshot) => {
       const moviesArray = [];
@@ -83,13 +77,18 @@ function App() {
     return () => unsubscribe();
   }, []);
 
+  // --- NOU: Salvăm filmul cu status-ul "planned" ---
   const addToWatchlist = async () => {
     if (!movie) return;
     try {
       await addDoc(collection(db, "movies"), {
-        title: movie.Title, year: movie.Year, poster: movie.Poster, rating: movie.imdbRating
+        title: movie.Title, 
+        year: movie.Year, 
+        poster: movie.Poster, 
+        rating: movie.imdbRating,
+        status: 'planned' // Setăm eticheta inițială
       });
-      alert("Film adăugat cu succes în Watchlist!");
+      alert("Film planificat pentru vizionare!");
       setMovie(null); 
       setQuery(''); 
     } catch (error) { console.error(error); }
@@ -100,26 +99,39 @@ function App() {
     catch (error) { console.error(error); }
   };
 
+  // --- NOU: Funcția care mută filmul la "Vizionate" ---
+  const markAsWatched = async (id) => {
+    try {
+      // updateDoc modifică doar câmpurile specificate, lăsând restul intacte
+      await updateDoc(doc(db, "movies", id), {
+        status: 'watched'
+      });
+    } catch (error) { console.error(error); }
+  };
+
+  // --- NOU: Filtrăm lista mare în două liste mai mici ---
+  // Dacă un film vechi nu are status (din testele anterioare), îl considerăm 'planned' implicit.
+  const plannedMovies = watchlist.filter(m => !m.status || m.status === 'planned');
+  const watchedMovies = watchlist.filter(m => m.status === 'watched');
+
   return (
     <div className="container">
       <h1>🎬 Movie Watchlist Inteligent</h1>
       
-      {/* --- BARA DE SEARCH MODIFICATĂ --- */}
       <div className="search-box">
         <div className="input-wrapper">
           <input 
             type="text" 
-            className="glowing-input" // Clasa nouă pentru animația de culori
+            className="glowing-input" 
             placeholder="Caută un film (ex: Matrix)..." 
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
-              setActiveIndex(0); // Resetăm selecția la prima literă tastată
+              setActiveIndex(0); 
             }}
             onKeyDown={handleKeyDown}
           />
           
-          {/* AICI APARE LISTA DE SUGESTII */}
           {showSuggestions && suggestions.length > 0 && (
             <ul className="suggestions-list">
               {suggestions.map((item, index) => (
@@ -151,7 +163,7 @@ function App() {
           ) : (
             <div className="rec-neutral">🍿 Recomandare: Un film mediocru.</div>
           )}
-          <button className="add-btn" onClick={addToWatchlist}>Adaugă în Watchlist</button>
+          <button className="add-btn" onClick={addToWatchlist}>Adaugă în Planificate</button>
         </div>
       )}
 
@@ -159,25 +171,51 @@ function App() {
         <p className="error">Nu am găsit niciun film cu acest nume.</p>
       )}
 
+      {/* --- NOU: Secțiunea Planificate --- */}
       <div className="watchlist-section">
-        <h2>🍿 Lista mea de vizionări</h2>
-        {watchlist.length === 0 ? (
-          <p>Lista este goală. Caută un film și adaugă-l!</p>
+        <h2 className="section-title">⏳ Planificate pentru vizionare</h2>
+        {plannedMovies.length === 0 ? (
+          <p className="empty-msg">Nu ai niciun film planificat.</p>
         ) : (
           <div className="watchlist-grid">
-            {watchlist.map((item) => (
+            {plannedMovies.map((item) => (
               <div key={item.id} className="watchlist-item">
                 <img src={item.poster !== "N/A" ? item.poster : "https://via.placeholder.com/150"} alt={item.title} />
                 <div className="item-details">
                   <h3>{item.title} ({item.year})</h3>
                   <p>⭐ {item.rating}</p>
-                  <button className="delete-btn" onClick={() => removeFromWatchlist(item.id)}>✅ Vizionat</button>
+                  <div className="action-buttons">
+                    <button className="mark-btn" onClick={() => markAsWatched(item.id)}>✅ Vizionat</button>
+                    <button className="delete-btn" onClick={() => removeFromWatchlist(item.id)}>🗑️ Șterge</button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* --- NOU: Secțiunea Vizionate --- */}
+      <div className="watchlist-section">
+        <h2 className="section-title">✔️ Filme Vizionate</h2>
+        {watchedMovies.length === 0 ? (
+          <p className="empty-msg">Nu ai vizionat niciun film încă.</p>
+        ) : (
+          <div className="watchlist-grid">
+            {watchedMovies.map((item) => (
+              <div key={item.id} className="watchlist-item watched-card">
+                <img src={item.poster !== "N/A" ? item.poster : "https://via.placeholder.com/150"} alt={item.title} />
+                <div className="item-details">
+                  <h3>{item.title} ({item.year})</h3>
+                  <p>⭐ {item.rating}</p>
+                  <button className="delete-btn" onClick={() => removeFromWatchlist(item.id)}>🗑️ Șterge din istoric</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
     </div>
   )
 }
