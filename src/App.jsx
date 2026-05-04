@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import { db } from './firebase'; 
-// --- NOU: Am adăugat updateDoc aici ---
 import { collection, addDoc, deleteDoc, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 
 function App() {
@@ -77,7 +76,6 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // --- NOU: Salvăm filmul cu status-ul "planned" ---
   const addToWatchlist = async () => {
     if (!movie) return;
     try {
@@ -99,18 +97,16 @@ function App() {
     catch (error) { console.error(error); }
   };
 
-  // --- NOU: Funcția care mută filmul la "Vizionate" ---
+  // --- Functia de modificare status ---
   const markAsWatched = async (id) => {
     try {
-      // updateDoc modifică doar câmpurile specificate, lăsând restul intacte
+      // updateDoc modifică DOAR câmpurile specificate
       await updateDoc(doc(db, "movies", id), {
         status: 'watched'
       });
     } catch (error) { console.error(error); }
   };
 
-  // --- NOU: Filtrăm lista mare în două liste mai mici ---
-  // Dacă un film vechi nu are status (din testele anterioare), îl considerăm 'planned' implicit.
   const plannedMovies = watchlist.filter(m => !m.status || m.status === 'planned');
   const watchedMovies = watchlist.filter(m => m.status === 'watched');
 
@@ -171,7 +167,6 @@ function App() {
         <p className="error">Nu am găsit niciun film cu acest nume.</p>
       )}
 
-      {/* --- NOU: Secțiunea Planificate --- */}
       <div className="watchlist-section">
         <h2 className="section-title">⏳ Planificate pentru vizionare</h2>
         {plannedMovies.length === 0 ? (
