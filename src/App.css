@@ -92,7 +92,7 @@ h1 {
 
 .search-box button:hover {
   background-color: var(--accent-hover);
-  box-shadow: 0 0 15px rgba(229, 9, 20, 0.6);
+  box-shadow: 0 0 15px rgba(9, 101, 229, 0.6);
 }
 
 .suggestions-list {
@@ -176,7 +176,6 @@ h1 {
 .rec-bad { background-color: rgba(220, 53, 69, 0.2); color: #ff8a95; border: 1px solid #dc3545; }
 .rec-neutral { background-color: rgba(255, 193, 7, 0.2); color: #ffd54f; border: 1px solid #ffc107; }
 
-/* Butonul de adăugare */
 .add-btn {
   background-color: var(--success);
   color: white;
