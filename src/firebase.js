@@ -1,8 +1,6 @@
-// src/firebase.js
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore"; // Importăm baza de date
 
-// Datele tale de configurare (le ai în screenshot)
 const firebaseConfig = {
   apiKey: "AiZaSyCD6v1RPqnrQrtnvJic147saOHnV8Unn7A",
   authDomain: "movie-watchlist-cfce8.firebaseapp.com",
@@ -13,8 +11,6 @@ const firebaseConfig = {
   measurementId: "G-EZ92Y0H876"
 };
 
-// Inițializăm Firebase
 const app = initializeApp(firebaseConfig);
 
-// Exportăm baza de date (db) pentru a o folosi în componentele noastre
 export const db = getFirestore(app);
