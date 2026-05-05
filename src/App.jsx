@@ -97,7 +97,6 @@ function App() {
     catch (error) { console.error(error); }
   };
 
-  // --- Functia de modificare status ---
   const markAsWatched = async (id) => {
     try {
       // updateDoc modifică DOAR câmpurile specificate

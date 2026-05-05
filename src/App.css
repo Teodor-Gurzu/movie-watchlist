@@ -1,10 +1,9 @@
-/* --- Reset și Variabile Globale --- */
 :root {
   --bg-color: #121212;
   --card-bg: #1e1e1e;
   --text-primary: #ffffff;
   --text-secondary: #b3b3b3;
-  --accent-color: #e50914; /* Roșu stil Netflix */
+  --accent-color: #e50914;
   --accent-hover: #b2070f;
   --success: #28a745;
   --success-hover: #218838;
@@ -14,6 +13,13 @@ body {
   margin: 0;
   padding: 0;
   background-color: var(--bg-color);
+  
+  background-image: url('./Amophes_Film_roll.png'), url('./Amophes_Film_roll.png');
+  background-position: left top, right top;
+  background-repeat: repeat-y, repeat-y;   
+  background-size: 120px auto;             
+  background-attachment: fixed;            
+
   color: var(--text-primary);
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -32,14 +38,12 @@ h1 {
   color: var(--text-primary);
 }
 
-/* --- Bara de Căutare --- */
-/* --- Bara de Căutare și Sugestii (Modificate pentru Animație) --- */
 .search-box {
   display: flex;
   justify-content: center;
   gap: 15px;
   margin-bottom: 40px;
-  position: relative; /* Important pentru a ancora lista dedesubt */
+  position: relative; 
   z-index: 10;
 }
 
@@ -49,7 +53,6 @@ h1 {
   max-width: 500px;
 }
 
-/* Animația magică de roșu și negru pe bordură */
 .glowing-input {
   width: 100%;
   padding: 15px 20px;
@@ -60,13 +63,12 @@ h1 {
   outline: none;
   box-sizing: border-box;
   
-  /* Truc CSS pentru bordură cu gradient animat */
   background-image: linear-gradient(var(--card-bg), var(--card-bg)),
                     linear-gradient(90deg, #ff0000, #111111, #e50914, #000000, #ff0000);
   background-origin: border-box;
   background-clip: padding-box, border-box;
   background-size: 100% 100%, 300% 100%;
-  animation: glowingBorder 4s linear infinite;
+  animation: glowingBorder 15s linear infinite;
   box-shadow: 0 0 15px rgba(229, 9, 20, 0.2); /* O umbră ușoară roșiatică */
 }
 
@@ -93,7 +95,6 @@ h1 {
   box-shadow: 0 0 15px rgba(229, 9, 20, 0.6);
 }
 
-/* --- Lista de Autocomplete (Sugestii) --- */
 .suggestions-list {
   position: absolute;
   top: 100%;
@@ -122,7 +123,6 @@ h1 {
   border-bottom: none;
 }
 
-/* Cum arată când treci cu mouse-ul sau navighezi cu săgețile */
 .suggestions-list li:hover,
 .suggestions-list li.active {
   background-color: #2a2a2a;
@@ -130,7 +130,6 @@ h1 {
   border-left: 4px solid var(--accent-color);
 }
 
-/* --- Cardul Filmului (Rezultatul Căutării) --- */
 .movie-card {
   background-color: var(--card-bg);
   border-radius: 12px;
@@ -193,7 +192,6 @@ h1 {
 
 .add-btn:hover { background-color: var(--success-hover); }
 
-/* --- Secțiunea Watchlist (Grila cu filme salvate) --- */
 .watchlist-section {
   padding-top: 40px;
   border-top: 1px solid #333;
@@ -246,12 +244,11 @@ h1 {
 }
 
 .item-details p {
-  color: #ffd54f; /* Culoare aurie pentru steaua de rating */
+  color: #ffd54f;
   margin: 0 0 15px 0;
   font-weight: bold;
 }
 
-/* --- Butoane de Acțiune pe Carduri --- */
 .action-buttons {
   display: flex;
   gap: 10px;
@@ -260,7 +257,7 @@ h1 {
 }
 
 .mark-btn, .delete-btn {
-  flex: 1; /* Împarte spațiul egal între ele */
+  flex: 1;
   padding: 8px;
   border-radius: 5px;
   cursor: pointer;
@@ -290,7 +287,6 @@ h1 {
   color: white;
 }
 
-/* Stilizare pentru lista goală și titluri secțiuni */
 .section-title {
   font-size: 1.8rem;
   margin-bottom: 20px;
@@ -307,7 +303,6 @@ h1 {
   margin-bottom: 40px;
 }
 
-/* Un efect estompat pentru filmele deja vizionate */
 .watched-card {
   opacity: 0.7;
   filter: grayscale(40%);
@@ -323,7 +318,6 @@ h1 {
   margin-top: 20px;
 }
 
-/* --- Design Responsiv --- */
 @media (max-width: 600px) {
   .search-box { flex-direction: column; }
   .search-box input { width: 100%; box-sizing: border-box; }
